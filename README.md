@@ -131,3 +131,9 @@ Serial通信について、特に参考にしたのは、[mizuyoukanao/WHALE](ht
 
 無印版（ver1）は[tangentialstar/
 arduino_program_for_gamecube](https://github.com/tangentialstar/arduino_program_for_gamecube ) です。
+
+### コマンドデータ仕様のイメージ
+short intの5桁の「下2桁」「上3桁」「プラスマイナスの別」でデータを管理しています。
+
+![gc_command_image](https://user-images.githubusercontent.com/107760099/178135650-a4202e02-8e9e-49c5-8728-bf3a6504425d.png)
+
