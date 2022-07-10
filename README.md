@@ -12,37 +12,18 @@ arduino_program_for_gamecube](https://github.com/tangentialstar/arduino_program_
 シリアルモニタに`a`や`b`、`x`、`r`などを入力して、ゲームキューブを操作できます **（大文字と小文字は区別されます！）** 。
 また、上下左右には`U`, `D`, `R`, `L`を入力してください。
 
-予めプログラムに入力した「自動化コマンド（87行目）」を**実行するには、シリアルモニタで`p`を送信**してください。
+詳しくは320行目`commandCheckAndConvert(void)`の中身を読んで下さい。
+
+
+なお、予めプログラムに入力した「自動化コマンド（87行目）」を**実行するには、シリアルモニタで`p`を送信**してください。
 また、コマンドを**確認するには、シリアルモニタで`q`を送信**してください。
 
-詳しくは320行目`commandCheckAndConvert(void)`の中身を読んで下さい。
+プログラム中に書き込むことができるコマンド数は、ArduinoのRAMサイズに依存します。
+Arduino microでは、**少なくとも「1KB分（＝512コマンド分）」の自動化列の記憶・操作が確認できました**。
+
 
 ![COM5 2022-07-10 15-36-17-0001](https://user-images.githubusercontent.com/107760099/178134183-fde2c53c-eacd-4460-9d48-dea06aff3d41.gif)
 
-### 無印版（ver1）との違い
-無印版（ver1）は[コチラ](https://github.com/tangentialstar/arduino_program_for_gamecube ) 。
-
-無印版との主な違いは「コマンドのデータ構造の見直し」です。
-1コマンドあたりに消費するRAMの容量を2byteに減らし、RAMが限られるArduino microでの複数コマンドの自動化を可能にしました。
-
-従来は、コマンド列を構造体
-```
-struct{
-  char command[11];
-  long int holdtime;
-} autocommand[];
-```
-で管理していたのに対して、今回のプログラムでは
-```
-signed short int autocommand[];
-```
-と改めました。
-これにより、RAM容量1KB換算(1024byte)で比較すると、従来（15byte/1command）はわずか「66コマンド」しか記憶できなかったのに対し、
-**今回（2byte/1command）は「500コマンド」も記憶することができる**ようになりました。
-Arduino microに操作プログラムをハードコーディングする上での課題を解決する形となっています。
-
-ただし、**スティック入力の角度が「5度」単位に制限される点、長押し時間および待機時間が「0.01秒」以下の単位が無視される点**には、注意してください。
-（1度単位でのスティック操作が必要な場合は[ver1](https://github.com/tangentialstar/arduino_program_for_gamecube )をお使いください）
 
 ## ゲームキューブとの配線
 
@@ -131,6 +112,33 @@ Serial通信について、特に参考にしたのは、[mizuyoukanao/WHALE](ht
 
 無印版（ver1）は[tangentialstar/
 arduino_program_for_gamecube](https://github.com/tangentialstar/arduino_program_for_gamecube ) です。
+
+
+
+### 無印版（ver1）との違い
+無印版（ver1）は[コチラ](https://github.com/tangentialstar/arduino_program_for_gamecube ) 。
+
+無印版との主な違いは「コマンドのデータ構造の見直し」です。
+1コマンドあたりに消費するRAMの容量を2byteに減らし、RAMが限られるArduino microでの複数コマンドの自動化を可能にしました。
+
+従来は、コマンド列を構造体
+```
+struct{
+  char command[11];
+  long int holdtime;
+} autocommand[];
+```
+で管理していたのに対して、今回のプログラムでは
+```
+signed short int autocommand[];
+```
+と改めました。
+これにより、RAM容量1KB換算(1024byte)で比較すると、従来（15byte/1command）はわずか「66コマンド」しか記憶できなかったのに対し、
+**今回（2byte/1command）は「500コマンド」も記憶することができる**ようになりました。
+Arduino microに操作プログラムをハードコーディングする上での課題を解決する形となっています。
+
+ただし、**スティック入力の角度が「5度」単位に制限される点、長押し時間および待機時間が「0.01秒」以下の単位が無視される点**には、注意してください。
+（1度単位でのスティック操作が必要な場合は[ver1](https://github.com/tangentialstar/arduino_program_for_gamecube )をお使いください）
 
 ### コマンドデータ仕様のイメージ
 short intの5桁の「下2桁」「上3桁」「プラスマイナスの別」でデータを管理しています。
